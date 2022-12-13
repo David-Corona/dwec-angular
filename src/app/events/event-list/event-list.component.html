@@ -1,0 +1,22 @@
+
+<nav class="navbar navbar-light bg-light justify-content-between mt-4">
+  <div class="container-fluid">
+    <ul class="nav">
+      <li class="nav-item">
+        <button class="nav-link btn shadow-none" (click)="orderDate()">Order by date</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link btn shadow-none" (click)="orderPrice()">Order price</button>
+      </li>
+    </ul>
+    <form class="d-flex mb-0">
+      <input class="form-control me-2" type="text" name="search" id="search" placeholder="Search"
+      [(ngModel)]="search" aria-label="Search">
+    </form>
+  </div>
+</nav>
+
+<h3 *ngIf="userName" class="mt-4 text-primary">List of events {{userName}} {{action}}</h3>
+<div class="mb-4 mt-4 row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" *ngIf="events.length" @animatedList>
+  <sv-event-card class="col" @animateList *ngFor="let event of events | eventsFilter:search" [event]="event" (deleted)="delete(event)"></sv-event-card>
+</div>

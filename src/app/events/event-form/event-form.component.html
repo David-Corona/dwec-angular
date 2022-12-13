@@ -1,0 +1,146 @@
+
+<form #eventForm="ngForm" class="mt-4" novalidate>
+  <div class="mb-3">
+    <label for="title" class="form-label">Name</label>
+    <div>
+      <input
+        type="text"
+        class="form-control"
+        name="title"
+        #titleModel="ngModel"
+        [(ngModel)]="anEvent.title"
+        required
+        pattern="[A-Za-z][A-Za-z\s]*"
+        [ngClass]="validClasses(titleModel, 'is-valid', 'is-invalid')"
+        placeholder="Enter title"
+      >
+      <div class="invalid-feedback" *ngIf="titleModel.errors?.['required']">
+        Title is required.
+      </div>
+      <div class="invalid-feedback" *ngIf="titleModel.errors?.['pattern']">
+        Title must include letters and may include spaces.
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="date" class="form-label">Date</label>
+    <div>
+      <input
+        type="datetime-local"
+        class="form-control"
+        name="date"
+        [(ngModel)]="anEvent.date"
+        required
+        #dateModel="ngModel"
+        svMinDate
+        [ngClass]="validClasses(dateModel, 'is-valid', 'is-invalid')"
+      >
+      <div class="invalid-feedback" *ngIf="dateModel.errors?.['required']">
+        Date is required.
+      </div>
+      <div class="invalid-feedback" *ngIf="dateModel.errors?.['minDate']">
+        Date cannot be before today.
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <div>
+      <textarea
+        class="form-control"
+        name="description"
+        required
+        #descModel="ngModel"
+        [(ngModel)]="anEvent.description"
+        rows="3"
+        [ngClass]="validClasses(descModel, 'is-valid', 'is-invalid')">
+      </textarea>
+      <div class="invalid-feedback">
+        Description is required.
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="price" class="form-label">Price (in €)</label>
+    <div>
+      <input
+        type="number"
+        class="form-control"
+        name="price"
+        [(ngModel)]="anEvent.price"
+        min="0.01"
+        step="0.01"
+        required
+        #priceModel="ngModel"
+        [ngClass]="validClasses(priceModel, 'is-valid', 'is-invalid')"
+      />
+      <div class="invalid-feedback">
+        Price must be a positive number.
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="image" class="form-label">Image</label>
+    <div>
+      <input
+        type="file"
+        class="form-control"
+        name="image"
+        [(ngModel)]="imageName"
+        #fileImage
+        (change)="changeImage(fileImage)"
+        [required]="isNewEvent"
+        #imageModel="ngModel"
+        [ngClass]="validClasses(imageModel, 'is-valid', 'is-invalid')"
+      >
+      <div class="invalid-feedback">
+        An image is required.</div>
+    </div>
+  </div>
+  <img class="img-thumbnail mb-3" [src]="anEvent.image" alt="" *ngIf="anEvent.image">
+
+  <div class="mb-3">
+    <label for="address" class="form-label">Address</label>
+    <div>
+      <input
+      type="text"
+      class="form-control"
+      name="address"
+      [(ngModel)]="anEvent.address"
+      readonly
+      required
+      placeholder="Select address in map below"
+      #addressModel="ngModel"
+      [ngClass]="validClasses(addressModel, 'is-valid', 'is-invalid')"
+      >
+      <div class="invalid-feedback">
+        Address is required.
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3 mt-4">
+    <mgl-map [style]="'mapbox://styles/mapbox/streets-v11'" [zoom]="[zoom]" [center]="[anEvent.lng, anEvent.lat]">
+      <mgl-marker [lngLat]="[anEvent.lng, anEvent.lat]"></mgl-marker>
+      <mgl-control mglGeocoder (result)="changePosition($event.result)"></mgl-control>
+    </mgl-map>
+  </div>
+
+  <div>
+    <button
+      *ngIf="!anEvent.id"
+      class="btn btn-primary px-5 mb-4"
+      (click)="setEvent()"
+      [disabled]="eventForm.invalid"
+      >Create
+    </button>
+    <button
+      *ngIf="anEvent.id"
+      class="btn btn-primary px-5 mb-4"
+      (click)="editEvent()"
+      [disabled]="eventForm.invalid || eventForm.pristine"
+      >Edit
+    </button>
+
+  </div>
+</form>

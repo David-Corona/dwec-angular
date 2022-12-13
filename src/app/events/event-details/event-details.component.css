@@ -1,0 +1,12 @@
+.avatar {
+  width: 4rem;
+  }
+
+.user-info {
+  width: 8rem;
+}
+
+mgl-map {
+  height: 600px;
+  width: 100%;
+}

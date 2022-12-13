@@ -1,0 +1,68 @@
+
+<sv-event-card [event]="event" (deleted)="goBack()" [isDetails]="isDetails" (updateAttendees)="showAttendees()"></sv-event-card>
+
+<div class="card mt-4">
+  <h4 class="card-title my-3 ms-2">Address: {{event.address}}</h4>
+  <mgl-map [style]="'mapbox://styles/mapbox/streets-v11'" [zoom]="[zoom]" [center]="[event.lng, event.lat]">
+    <mgl-marker [lngLat]="[event.lng, event.lat]"></mgl-marker>
+  </mgl-map>
+</div>
+
+<button type="submit" class="btn btn-primary mt-4" (click)="showOnlyComments()">
+  Show Attendees
+</button>
+<button type="submit" class="btn btn-primary mt-4 ms-1" (click)="showOnlyAttendees()">
+  Show Comments
+</button>
+
+<div *ngIf="show">
+  <li class="list-group-item active mt-4">Attendees to the event</li>
+  <li class="list-group-item" *ngFor="let attendee of attendees">
+    <a [routerLink]="['/users', attendee.id]">
+      <img class="rounded-circle float-start me-3" style="width: 40px;" src="{{attendee.avatar}}" alt="" />
+    </a>
+    <div>
+      <div><a class="text-decoration-none" [routerLink]="['/users', attendee.id]">{{attendee.name}}</a></div>
+      <div>
+        <small>{{attendee.email}}</small>
+      </div>
+    </div>
+  </li>
+</div>
+
+<div *ngIf="!show">
+  <ul class="list-group mt-4 mb-4">
+    <li class="list-group-item active">User comments</li>
+    <li class="list-group-item" *ngFor="let comment of comments">
+      <div class="row">
+        <div class="col-auto text-center user-info">
+          <a [routerLink]="['/users', comment.user!.id]">
+            <img class="avatar rounded-circle" src="{{comment.user!.avatar}}" />
+          </a>
+          <div>
+            <small><a [routerLink]="['/users', comment.user!.id]" class="text-decoration-none">{{comment.user!.name}}</a></small>
+          </div>
+          <div><small>{{comment.date | date:'dd/MM/y H:mm'}}</small></div>
+        </div>
+        <div id="text" class="col"
+        [innerText]=comment.comment>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <form (ngSubmit)="postComment()" *ngIf="event.attend">
+    <span class="list-group-item active">Post a new Comment:</span>
+    <textarea
+      class="form-control"
+      name="comment"
+      [(ngModel)]="newComment.comment"
+      required
+      rows="4"
+    ></textarea>
+    <button type="submit" class="btn btn-primary float-end mt-1">Post Comment</button>
+  </form>
+</div>
+
+<div class="mt-5 mb-4">
+  <button class="btn btn-success" (click)="goBack()">Go back</button>
+</div>

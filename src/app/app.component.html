@@ -1,0 +1,7 @@
+
+<sv-menu-top [title]="title"></sv-menu-top>
+
+<div class="container" [@routeAnimation]="getState(routerOutlet)">
+  <router-outlet #routerOutlet="outlet"></router-outlet>
+</div>
+

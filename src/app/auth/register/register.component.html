@@ -1,0 +1,157 @@
+
+<div class="container">
+  <form class="mt-4" #registerForm="ngForm" (ngSubmit)="createAccount()">
+    <legend>Create an account</legend>
+
+    <div class="mb-3">
+      <label for="nombre">Name:</label>
+      <div>
+        <input
+          type="text"
+          class="form-control"
+          name="nameUser"
+          placeholder="Name"
+          [(ngModel)]="newUser.name"
+          #nameModel="ngModel"
+          pattern="[A-Za-z][A-Za-z\s]*"
+          [ngClass]="validClasses(nameModel, 'is-valid', 'is-invalid')"
+          required
+        />
+        <div class="invalid-feedback" *ngIf="nameModel.errors?.['required']">
+          Name is required.
+        </div>
+        <div class="invalid-feedback" *ngIf="nameModel.errors?.['pattern']">
+          Name must include letters and may include spaces.
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="correo">Email:</label>
+      <div>
+        <input
+          type="email"
+          class="form-control"
+          name="email"
+          placeholder="Email"
+          [(ngModel)]="newUser.email"
+          #emailModel="ngModel"
+          pattern="^\S+@\S+\.\S+$"
+          [ngClass]="validClasses(emailModel, 'is-valid', 'is-invalid')"
+          required
+        />
+        <div class="invalid-feedback" *ngIf="emailModel.errors?.['required']">
+          Email is required.
+        </div>
+        <div class="invalid-feedback" *ngIf="emailModel.errors?.['pattern']">
+          Must be a correct email address.
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="correo">Repeat Email:</label>
+      <div>
+      <input
+        type="email"
+        class="form-control"
+        name="email2"
+        placeholder="Email"
+        [(ngModel)]="emailRep"
+        #email2Model="ngModel"
+        pattern="{{ emailModel.value }}"
+        [ngClass]="validClasses(email2Model, 'is-valid', 'is-invalid')"
+        required
+      />
+      <div class="invalid-feedback" *ngIf="email2Model.errors?.['required']">
+        Email is required.
+      </div>
+      <div class="invalid-feedback" *ngIf="email2Model.errors?.['pattern']">
+        This email must coincide with previous input.
+      </div>
+    </div>
+    </div>
+    <div class="mb-3">
+      <label for="password">Password:</label>
+      <div>
+        <input
+          type="password"
+          class="form-control"
+          name="password"
+          placeholder="Password"
+          [(ngModel)]="newUser.password"
+          #passwordModel="ngModel"
+          minlength="4"
+          [ngClass]="validClasses(passwordModel, 'is-valid', 'is-invalid')"
+          required
+        />
+        <div class="invalid-feedback" *ngIf="passwordModel.errors?.['required']">
+          Password is required.
+        </div>
+        <div class="invalid-feedback" *ngIf="passwordModel.errors?.['minlength']">
+          Password must have at least 4 characters.
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="mb-3 col">
+        <label for="lat">Latitude:</label>
+        <div>
+          <input
+            type="number"
+            class="form-control"
+            name="lat"
+            placeholder="Geolocating..."
+            readonly
+            [(ngModel)]="newUser.lat"
+            #latModel="ngModel"
+            [ngClass]="validClasses(latModel, 'is-valid', 'is-invalid')"
+            required
+          />
+          <div class="invalid-feedback" >
+            Latitude is required, please allow geolocation.
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 col">
+        <label for="lng">Longitude:</label>
+        <div>
+          <input
+            type="number"
+            class="form-control"
+            name="lng"
+            placeholder="Geolocating..."
+            readonly
+            [(ngModel)]="newUser.lng"
+            #lngModel="ngModel"
+            [ngClass]="validClasses(lngModel, 'is-valid', 'is-invalid')"
+            required
+          />
+          <div class="invalid-feedback">
+            Longitude is required, please allow geolocation.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="image">Avatar image</label>
+      <div>
+        <input
+          type="file"
+          (change)="loadImage($event)"
+          class="form-control"
+          name="avatar"
+          (ngModel)="newUser.avatar"
+          #avatarModel="ngModel"
+          [ngClass]="validClasses(avatarModel, 'is-valid', 'is-invalid')"
+          required
+        />
+        <div class="invalid-feedback">
+          Avatar image is required.
+        </div>
+      </div>
+    </div>
+    <img src="{{newUser.avatar}}" alt="" #imgPreview class="img-thumbnail d-none" />
+    <p class="text-danger" id="errorInfo"></p>
+    <a class="btn btn-secondary me-2" [routerLink]="['/auth/login']" role="button">Go back</a>
+    <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Create account</button>
+  </form>
+</div>
